@@ -1,4 +1,5 @@
 import 'package:device_preview_plus/device_preview_plus.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 import 'package:p1/controller/cadastroController.dart';
@@ -8,6 +9,7 @@ import 'package:p1/controller/dadoPadraoController.dart';
 import 'package:p1/controller/loginController.dart';
 import 'package:p1/controller/perfilMenuController.dart';
 import 'package:p1/controller/recuperar_senhaController.dart';
+import 'package:p1/firebase_options.dart';
 import 'package:p1/view/cadastroView.dart';
 import 'package:p1/view/configView.dart';
 import 'package:p1/view/dadoMaisView.dart';
@@ -18,9 +20,19 @@ import 'package:p1/view/menuView.dart';
 import 'package:p1/view/perfilMenuView.dart';
 import 'package:p1/view/recuperarSenhaView.dart';
 import 'package:p1/view/sobreView.dart';
+import 'package:p1/controller/historicoController.dart';
+import 'package:p1/view/historicoView.dart';
+
+
 
 final g = GetIt.instance;
-void main() {
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
+
+  g.registerSingleton<HistoricoController>(HistoricoController());
   g.registerSingleton<LoginController>(LoginController());
   g.registerSingleton<CadastroController>(CadastroController());
   g.registerSingleton<MenuPerfilController>(MenuPerfilController());
@@ -34,6 +46,8 @@ void main() {
     )
   );
 }
+
+
 
 class MainApp extends StatelessWidget {
  MainApp({super.key});
@@ -95,6 +109,7 @@ class MainApp extends StatelessWidget {
         'inicio':(context) => Inicioview(),
         'dado_padrao':(context) => Dadopadraoview(),
         'dado_mais':(context) => Dadomaisview(),
+        'historico': (context) => HistoricoView(),
       },
 
       onUnknownRoute: (settings) {

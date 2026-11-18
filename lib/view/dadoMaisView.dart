@@ -25,6 +25,29 @@ class _DadomaisviewState extends State<Dadomaisview> {
 
   @override
   Widget build(BuildContext context) {
+    int X = 0;
+    int Y = 0;
+    int Z = 0;
+
+    for (final r in crtl.resultado) {
+      if (X < r) {
+        X = r;
+      }
+    }
+
+    if (crtl.resultado.isNotEmpty) {
+      Y = crtl.resultado.first;
+      for (final r in crtl.resultado) {
+        if (Y > r) {
+          Y = r;
+        }
+      }
+    }
+
+    for (final r in crtl.resultado) {
+      Z += r;
+    }
+
     return Scaffold(
       appBar: AppBar(title: Text('Mais Dados')),
       body: SafeArea(
@@ -44,10 +67,7 @@ class _DadomaisviewState extends State<Dadomaisview> {
                         Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            Icon(
-                              Icons.format_list_bulleted,
-                              size: 30,
-                            ),
+                            Icon(Icons.format_list_bulleted, size: 30),
                             Text(
                               'Quantidade: ',
                               style: TextStyle(
@@ -65,7 +85,7 @@ class _DadomaisviewState extends State<Dadomaisview> {
                                     '1',
                                     style: TextStyle(
                                       fontWeight: FontWeight.bold,
-                                      fontSize: 25,
+                                      fontSize: 30,
                                     ),
                                   ),
                                 ),
@@ -75,7 +95,7 @@ class _DadomaisviewState extends State<Dadomaisview> {
                                     '2',
                                     style: TextStyle(
                                       fontWeight: FontWeight.bold,
-                                      fontSize: 25,
+                                      fontSize: 30,
                                     ),
                                   ),
                                 ),
@@ -85,7 +105,7 @@ class _DadomaisviewState extends State<Dadomaisview> {
                                     '3',
                                     style: TextStyle(
                                       fontWeight: FontWeight.bold,
-                                      fontSize: 25,
+                                      fontSize: 30,
                                     ),
                                   ),
                                 ),
@@ -95,7 +115,7 @@ class _DadomaisviewState extends State<Dadomaisview> {
                                     '4',
                                     style: TextStyle(
                                       fontWeight: FontWeight.bold,
-                                      fontSize: 25,
+                                      fontSize: 30,
                                     ),
                                   ),
                                 ),
@@ -105,7 +125,7 @@ class _DadomaisviewState extends State<Dadomaisview> {
                                     '5',
                                     style: TextStyle(
                                       fontWeight: FontWeight.bold,
-                                      fontSize: 25,
+                                      fontSize: 30,
                                     ),
                                   ),
                                 ),
@@ -122,10 +142,7 @@ class _DadomaisviewState extends State<Dadomaisview> {
                         Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            Icon(
-                              Icons.casino_sharp,
-                              size: 30,
-                            ),
+                            Icon(Icons.casino_sharp, size: 30),
 
                             Text(
                               'Tipo do Dado: ',
@@ -144,7 +161,7 @@ class _DadomaisviewState extends State<Dadomaisview> {
                                     'D3',
                                     style: TextStyle(
                                       fontWeight: FontWeight.bold,
-                                      fontSize: 25,
+                                      fontSize: 30,
                                     ),
                                   ),
                                 ),
@@ -154,7 +171,7 @@ class _DadomaisviewState extends State<Dadomaisview> {
                                     'D4',
                                     style: TextStyle(
                                       fontWeight: FontWeight.bold,
-                                      fontSize: 25,
+                                      fontSize: 30,
                                     ),
                                   ),
                                 ),
@@ -164,7 +181,7 @@ class _DadomaisviewState extends State<Dadomaisview> {
                                     'D8',
                                     style: TextStyle(
                                       fontWeight: FontWeight.bold,
-                                      fontSize: 25,
+                                      fontSize: 30,
                                     ),
                                   ),
                                 ),
@@ -174,7 +191,7 @@ class _DadomaisviewState extends State<Dadomaisview> {
                                     'D10',
                                     style: TextStyle(
                                       fontWeight: FontWeight.bold,
-                                      fontSize: 25,
+                                      fontSize: 30,
                                     ),
                                   ),
                                 ),
@@ -184,7 +201,7 @@ class _DadomaisviewState extends State<Dadomaisview> {
                                     'D20',
                                     style: TextStyle(
                                       fontWeight: FontWeight.bold,
-                                      fontSize: 25,
+                                      fontSize: 30,
                                     ),
                                   ),
                                 ),
@@ -194,7 +211,7 @@ class _DadomaisviewState extends State<Dadomaisview> {
                                     'D100',
                                     style: TextStyle(
                                       fontWeight: FontWeight.bold,
-                                      fontSize: 25,
+                                      fontSize: 30,
                                     ),
                                   ),
                                 ),
@@ -204,7 +221,7 @@ class _DadomaisviewState extends State<Dadomaisview> {
                                     'D200',
                                     style: TextStyle(
                                       fontWeight: FontWeight.bold,
-                                      fontSize: 25,
+                                      fontSize: 30,
                                     ),
                                   ),
                                 ),
@@ -219,8 +236,24 @@ class _DadomaisviewState extends State<Dadomaisview> {
                         ),
 
                         ElevatedButton(
-                          onPressed: () {
-                            crtl.sortear(_valor ?? 1, _lados ?? 3);
+                          onPressed: () async {
+                            final salvou = await crtl.sortear(
+                              _valor ?? 1,
+                              _lados ?? 3,
+                            );
+                            if (!context.mounted) return;
+
+                            ScaffoldMessenger.of(context)
+                              ..hideCurrentSnackBar()
+                              ..showSnackBar(
+                                SnackBar(
+                                  content: Text(
+                                    salvou
+                                        ? 'Rolagem salva no histórico com sucesso!'
+                                        : 'Erro ao salvar a rolagem no histórico.',
+                                  ),
+                                ),
+                              );
                           },
                           child: Text(
                             'Rolar',
@@ -260,6 +293,85 @@ class _DadomaisviewState extends State<Dadomaisview> {
                                     fontSize: 40,
                                   ),
                                 ),
+
+                              Expanded(child: SizedBox(height: 20)),
+
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Expanded(
+                                    child: Column(
+                                      children: [
+                                        Text(
+                                          "($Y)",
+                                          style: TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 20,
+                                          ),
+                                        ),
+
+                                        SizedBox(height: 8),
+
+                                        Text(
+                                          'Menor',
+                                          style: TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 20,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+
+                                  Expanded(
+                                    child: Column(
+                                      children: [
+                                        Text(
+                                          "($Z)",
+                                          style: TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 20,
+                                          ),
+                                        ),
+
+                                        SizedBox(height: 8),
+
+                                        Text(
+                                          'Total',
+                                          style: TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 20,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+
+                                  Expanded(
+                                    child: Column(
+                                      children: [
+                                        Text(
+                                          "($X)",
+                                          style: TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 20,
+                                          ),
+                                        ),
+
+                                        SizedBox(height: 8),
+
+                                        Text(
+                                          'Maior',
+                                          style: TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 20,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ],
+                              ),
                             ],
                           ),
                         ),

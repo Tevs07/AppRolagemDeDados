@@ -24,21 +24,15 @@ class _MenuviewState extends State<Menuview> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Text(
-                  'Dice Master',
-                  style: TextStyle(
-                    fontSize: 30,
-                    fontWeight: FontWeight.bold,
-                  ),
-                  textAlign: TextAlign.center,
-                ),
+                      'Dice Master',
+                      style: TextStyle(
+                        fontSize: 30,
+                        fontWeight: FontWeight.bold,
+                      ),
+                      textAlign: TextAlign.center,
+                    ),
 
-                Image.asset(
-                'assets/dado.png',
-                width: 60,
-                height: 60,
-                ),
-
-                
+                    Image.asset('assets/dado.png', width: 60, height: 60),
                   ],
                 ),
               ),
@@ -61,15 +55,10 @@ class _MenuviewState extends State<Menuview> {
                           crossAxisSpacing: 20,
                           children: [
                             Card(
-                              color: Theme.of(
-                                context,
-                              ).colorScheme.primary,
+                              color: Theme.of(context).colorScheme.primary,
                               child: InkWell(
                                 onTap: () {
-                                  Navigator.pushNamed(
-                                    context, 
-                                    'dado_mais',
-                                    );
+                                  Navigator.pushNamed(context, 'dado_mais');
                                 },
                                 child: Column(
                                   mainAxisAlignment: MainAxisAlignment.center,
@@ -99,15 +88,10 @@ class _MenuviewState extends State<Menuview> {
                             ),
 
                             Card(
-                              color: Theme.of(
-                                context,
-                              ).colorScheme.primary,
+                              color: Theme.of(context).colorScheme.primary,
                               child: InkWell(
                                 onTap: () {
-                                  Navigator.pushNamed(
-                                    context, 
-                                    'dado_padrao',
-                                    );
+                                  Navigator.pushNamed(context, 'dado_padrao');
                                 },
                                 child: Column(
                                   mainAxisAlignment: MainAxisAlignment.center,
@@ -150,9 +134,7 @@ class _MenuviewState extends State<Menuview> {
             height: 120,
 
             child: ColoredBox(
-              color: Theme.of(
-                context,
-              ).colorScheme.primary, //retangulo colorido
+              color: Theme.of(context).colorScheme.primary, //retangulo colorido
 
               child: Padding(
                 //mudar a margem do ícone (nesse caso quero afastar um pouco da borda da esquerda)
@@ -167,10 +149,15 @@ class _MenuviewState extends State<Menuview> {
                         Navigator.pushNamed(context, 'config');
                       },
 
-                      icon: Icon(
-                        Icons.settings,
-                        size: 70,
-                      ),
+                      icon: Icon(Icons.settings, size: 70),
+                    ),
+
+                    IconButton(
+                      onPressed: () {
+                        Navigator.pushNamed(context, 'historico');
+                      },
+
+                      icon: Icon(Icons.history, size: 70),
                     ),
 
                     IconButton(
@@ -179,10 +166,7 @@ class _MenuviewState extends State<Menuview> {
                         Navigator.pushNamed(context, 'menu_perfil');
                       },
 
-                      icon: Icon(
-                        Icons.account_circle,
-                        size: 70,
-                      ),
+                      icon: Icon(Icons.account_circle, size: 70),
                     ),
                   ],
                 ),

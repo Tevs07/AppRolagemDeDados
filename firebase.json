@@ -1,0 +1,39 @@
+{
+  "flutter": {
+    "platforms": {
+      "android": {
+        "default": {
+          "projectId": "rolagem-dados",
+          "appId": "1:358795217831:android:088a72dd4e7ef6cc840482",
+          "fileOutput": "android/app/google-services.json"
+        }
+      },
+      "dart": {
+        "lib/firebase_options.dart": {
+          "projectId": "rolagem-dados",
+          "configurations": {
+            "android": "1:358795217831:android:088a72dd4e7ef6cc840482",
+            "ios": "1:358795217831:ios:2d9e631cb33fb6e8840482",
+            "macos": "1:358795217831:ios:2d9e631cb33fb6e8840482",
+            "web": "1:358795217831:web:d7a37cd6102c91b1840482",
+            "windows": "1:358795217831:web:09d729703a9cebf6840482"
+          }
+        }
+      }
+    }
+  },
+  "hosting": {
+    "public": "build/web",
+    "ignore": [
+      "firebase.json",
+      "**/.*",
+      "**/node_modules/**"
+    ],
+    "rewrites": [
+      {
+        "source": "**",
+        "destination": "/index.html"
+      }
+    ]
+  }
+}

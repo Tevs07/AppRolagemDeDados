@@ -12,96 +12,104 @@ class RecuperarSenhaView extends StatefulWidget {
 class _RecuperarSenhaViewState extends State<RecuperarSenhaView> {
   final crtl = GetIt.I.get<RecuperarSenhaController>();
 
+  void _atualizar() => setState(() {});
+
   @override
-  void initState(){
+  void initState() {
     super.initState();
-    crtl.addListener(() => setState(() {}));
+    crtl.addListener(_atualizar);
   }
-  
+
+  @override
+  void dispose() {
+    crtl.removeListener(_atualizar);
+    super.dispose();
+  }
+
+  Future<void> _enviar() async {
+    final erro = await crtl.recuperarSenha();
+    if (!mounted) return;
+
+    ScaffoldMessenger.of(context)
+      ..hideCurrentSnackBar()
+      ..showSnackBar(
+        SnackBar(
+          content: Text(
+            erro ??
+                'Se o e-mail estiver cadastrado, você receberá as instruções para criar uma nova senha.',
+            style: const TextStyle(fontSize: 20),
+          ),
+        ),
+      );
+
+    if (erro == null) Navigator.pop(context); 
+  }
+
   @override
   Widget build(BuildContext context) {
-    // base para todo view
     return Scaffold(
       body: SafeArea(
         child: Padding(
-          padding: EdgeInsets.all(20),
+          padding: const EdgeInsets.all(20),
           child: Column(
             children: [
               AppBar(
-                title: Text('Recuperar Senha'),
-                titleTextStyle: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
+                title: const Text('Recuperar Senha'),
+                titleTextStyle: const TextStyle(
+                  fontSize: 30,
+                  fontWeight: FontWeight.bold,
+                ),
                 centerTitle: true,
               ),
 
-              //SizedBox(height: 100),
-
-              /*Align(
-                alignment: AlignmentGeometry.center,
-                child: Text(
-                  'Recuperar Senha',
-                  style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
-                ),
-              ),*/
-
-              SizedBox(height: 30),
+              const SizedBox(height: 30),
 
               Align(
-                alignment: AlignmentGeometry.topLeft,
+                alignment: Alignment.topLeft,
                 child: Text(
                   'Preencha o campo para receber o E-Mail de troca de senha',
-                  style: TextStyle(color: Theme.of(context).colorScheme.onPrimaryContainer, fontSize: 15),
-                ),
-              ),
-
-              SizedBox(height: 20),
-
-              TextField(
-                controller: crtl.email,
-                style: TextStyle(color: Color(0xFF4B2D8F)),
-                decoration: InputDecoration(
-                  labelText: 'E-mail',
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(20)
-                  )
-                ),
-              ),
-
-              SizedBox(height: 20),
-
-              Align(
-                alignment: AlignmentGeometry.center,
-                child: ElevatedButton(
-                  onPressed: () {
-                    if (crtl.email.text.trim().isEmpty || !crtl.email.text.trim().endsWith('@gmail.com')){
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(content: Text(
-                          'Preencha o Campo Corretamente',
-                          style: TextStyle(fontSize: 20)),
-                        )
-                      );
-                    }
-                    else {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(content: Text(
-                          'Email de recuperação de senha enviado',
-                          style: TextStyle(fontSize: 20)),
-                        )
-                      );
-                    }
-                  }, 
-                  style: ElevatedButton.styleFrom(minimumSize: Size(120, 60)),
-                  child: Text(
-                    'Enviar',
-                    style: TextStyle(fontSize: 15),
+                  style: TextStyle(
+                    color: Theme.of(context).colorScheme.onPrimaryContainer,
+                    fontSize: 15,
                   ),
                 ),
               ),
-            ]
+
+              const SizedBox(height: 20),
+
+              TextField(
+                controller: crtl.email,
+                style: const TextStyle(color: Color(0xFF4B2D8F)),
+                decoration: InputDecoration(
+                  labelText: 'E-mail',
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(20),
+                  ),
+                ),
+              ),
+
+              const SizedBox(height: 20),
+
+              Align(
+                alignment: Alignment.center,
+                child: ElevatedButton(
+                  onPressed: crtl.carregando ? null : _enviar,
+                  style: ElevatedButton.styleFrom(
+                    minimumSize: const Size(120, 60),
+                  ),
+                  child: crtl.carregando
+                      ? const SizedBox(
+                          width: 24,
+                          height: 24,
+                          child: CircularProgressIndicator(strokeWidth: 3),
+                        )
+                      : const Text('Enviar', style: TextStyle(fontSize: 15)),
+                ),
+              ),
+            ],
           ),
         ),
       ),
     );
   }
 }
-
-

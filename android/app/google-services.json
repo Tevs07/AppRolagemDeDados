@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "358795217831",
+    "project_id": "rolagem-dados",
+    "storage_bucket": "rolagem-dados.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:358795217831:android:088a72dd4e7ef6cc840482",
+        "android_client_info": {
+          "package_name": "com.example.p1"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBe-Uz_QmYrWklAvGMWIo_q5oCgXADL8ac"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

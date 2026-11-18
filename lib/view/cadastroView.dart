@@ -14,11 +14,42 @@ class _CadastroviewState extends State<Cadastroview> {
   final crtl = GetIt.I.get<CadastroController>();
   bool _alterarEstado = true;
 
-   @override
-  void initState(){
-    super.initState();
-    crtl.addListener(() => setState(() {}));
+ void _atualizar() => setState(() {});
+
+@override
+void initState() {
+  super.initState();
+  crtl.addListener(_atualizar);
+}
+
+@override
+void dispose() {
+  crtl.removeListener(_atualizar);
+  super.dispose();
+}
+
+void _mensagem(String texto) {
+  ScaffoldMessenger.of(context)
+    ..hideCurrentSnackBar()
+    ..showSnackBar(
+      SnackBar(content: Text(texto, style: const TextStyle(fontSize: 20))),
+    );
+}
+
+Future<void> _cadastrar() async {
+  final erro = await crtl.cadastrar();
+  if (!mounted) return;
+
+  if (erro != null) {
+    _mensagem(erro);
+    return;
   }
+
+  _mensagem('Conta criada com sucesso.');
+  Navigator.pushNamedAndRemoveUntil(context, 'menu', (route) => false);
+}
+
+
 
   @override
   Widget build(BuildContext context) {
@@ -27,8 +58,8 @@ class _CadastroviewState extends State<Cadastroview> {
         title: Text('Cadastro'),
       ),
       body: SafeArea(
-        child: Padding(
-          padding: EdgeInsets.all(20),
+        child: SingleChildScrollView(
+          padding: const EdgeInsets.all(20),
           child: Column(
             children: [
               TextField(
@@ -61,7 +92,7 @@ class _CadastroviewState extends State<Cadastroview> {
               style: TextStyle(color: Theme.of(context).colorScheme.onPrimaryContainer),
               controller: crtl.telefone,
               decoration: InputDecoration(
-                labelText: 'Telefone: ex.: 55+ (67) 999999999',
+                labelText: 'Telefone',
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(20),
                 ),           
@@ -73,9 +104,10 @@ class _CadastroviewState extends State<Cadastroview> {
             TextField(
               style: TextStyle(color: Theme.of(context).colorScheme.onPrimaryContainer),
               controller: crtl.senha,
-              obscureText: _alterarEstado, //deixar o texto obscuro
+              obscureText: _alterarEstado, 
               decoration: InputDecoration(
                 labelText: 'Senha',
+                helperText:  'Mínimo de 8 caracteres, com letras e números',
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(20),
                 ),
@@ -115,31 +147,16 @@ class _CadastroviewState extends State<Cadastroview> {
             SizedBox(height: 30),
 
             ElevatedButton(
-              onPressed: () {
-                if(crtl.email.text.trim().isEmpty || crtl.senha.text.trim().isEmpty || !crtl.email.text.trim().endsWith("@gmail.com") || crtl.confirmarSenha.text.trim().isEmpty || crtl.nomeUsuario.text.trim().isEmpty || crtl.telefone.text.trim().isEmpty){
-                  ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(content: Text(
-                        'Preencha os Campos Corretamente',
-                        style: TextStyle(fontSize: 20)),
-                        )
-                      );
-                } else {
-                  Usuario.atual = Usuario(
-                    nome: crtl.nomeUsuario.text.trim(),
-                    email: crtl.email.text.trim(),
-                    telefone: crtl.telefone.text.trim(),
-                    senha: crtl.senha.text.trim(),
-);
-                  Navigator.pushNamed(context, 'menu');
-                }
-                
-                },
-              style: ElevatedButton.styleFrom(minimumSize: Size(120, 60)),
-               child: Text(
-                'Cadastrar',
-                style: TextStyle(fontSize: 15),
-                ),
-               ),
+  onPressed: crtl.carregando ? null : _cadastrar,
+  style: ElevatedButton.styleFrom(minimumSize: const Size(120, 60)),
+  child: crtl.carregando
+      ? const SizedBox(
+          width: 24,
+          height: 24,
+          child: CircularProgressIndicator(strokeWidth: 3),
+        )
+      : const Text('Cadastrar', style: TextStyle(fontSize: 15)),
+),
 
             ]
             ),
